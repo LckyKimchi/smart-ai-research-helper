@@ -55,7 +55,7 @@ if st.button("Research Topic", type="primary"):
             """
 
             with st.spinner("Agent is thinking and gathering sources..."):
-                models_to_try = ["gemini-2.5-flash", "gemini-2.5-flash-lite"]
+                models_to_try = ["gemini-3.5-flash", "gemini-3.5-flash-lite"]
                 response = None
                 last_error = None
 
