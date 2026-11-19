@@ -57,7 +57,7 @@ if st.button("Research Topic", type="primary"):
             with st.spinner("Agent is thinking and gathering sources..."):
                 # The SDK automatically executes search_web() when Gemini requests it!
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-3.8-flash",
                     contents=prompt,
                     config=types.GenerateContentConfig(
                         tools=[search_web],
