@@ -32,9 +32,14 @@ if not api_key:
     api_key = st.sidebar.text_input("Enter your Gemini API Key:", type="password")
 
 # 4. Main App Interface
-topic = st.text_input("What would you like me to research?", placeholder="e.g., Compare the latest MacBook Air vs Dell XPS 13")
+with st.form("research_form"):
+    topic = st.text_input(
+        "What would you like me to research?", 
+        placeholder="e.g., Compare the latest MacBook Air vs Dell XPS 13"
+    )
+    submitted = st.form_submit_button("Research Topic", type="primary")
 
-if st.button("Research Topic", type="primary"):
+if submitted:
     if not api_key:
         st.warning("Please enter your Gemini API Key in the sidebar first.")
     elif not topic:
