@@ -32,7 +32,7 @@ if not api_key:
     api_key = st.sidebar.text_input("Enter your Gemini API Key:", type="password")
 
 # 4. Main App Interface
-topic = st.text_input("What would you like me to research?", placeholder="e.g., Compare the latest M4 MacBook Air vs Dell XPS 13")
+topic = st.text_input("What would you like me to research?", placeholder="e.g., Compare the latest MacBook Air vs Dell XPS 13")
 
 if st.button("Research Topic", type="primary"):
     if not api_key:
@@ -55,15 +55,29 @@ if st.button("Research Topic", type="primary"):
             """
 
             with st.spinner("Agent is thinking and gathering sources..."):
-                # The SDK automatically executes search_web() when Gemini requests it!
-                response = client.models.generate_content(
-                    model="gemini-3.8-flash",
-                    contents=prompt,
-                    config=types.GenerateContentConfig(
-                        tools=[search_web],
-                        temperature=0.3,
-                    ),
-                )
+                models_to_try = ["gemini-2.5-flash", "gemini-2.5-flash-lite"]
+                response = None
+                last_error = None
+
+                for model_name in models_to_try:
+                    try:
+                        response = client.models.generate_content(
+                            model=model_name,
+                            contents=prompt,
+                            config=types.GenerateContentConfig(
+                                tools=[search_web],
+                                temperature=0.3,
+                            ),
+                        )
+                        break
+                    except Exception as model_err:
+                        last_error = model_err
+                        if "503" in str(model_err) or "404" in str(model_err):
+                            continue
+                        raise model_err
+
+                if not response:
+                    raise last_error
             
             st.markdown("### Research Briefing")
             st.markdown(response.text)
